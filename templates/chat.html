@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #chat-box {
+            width: 50%;
+            max-width: 600px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        #chat-box div {
+            margin: 5px 0;
+        }
+        #chat-box .user {
+            text-align: right;
+            background-color: #d1e7fd;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        #chat-box .bot {
+            text-align: left;
+            background-color: #d4f8d4;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        input[type="text"] {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with GPT-2 Chatbot</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Type your message here">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function loadHistory() {
+            const response = await fetch("/history");
+            const data = await response.json();
+    
+            if (data.history) {
+                const chatBox = document.getElementById("chat-box");
+    
+                // Add previous messages to the chat box
+                data.history.forEach((entry) => {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.className = entry.role === "user" ? "user" : "bot";
+                    messageDiv.textContent =
+                        (entry.role === "user" ? "You: " : "Bot: ") + entry.message;
+                    chatBox.appendChild(messageDiv);
+                });
+    
+                // Scroll to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+    
+            const chatBox = document.getElementById("chat-box");
+    
+            // Display user message
+            const userMessage = document.createElement("div");
+            userMessage.className = "user";
+            userMessage.textContent = "You: " + userInput;
+            chatBox.appendChild(userMessage);
+    
+            // Send the message to the server
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prompt: userInput }),
+            });
+            const data = await response.json();
+    
+            // Display chatbot response
+            const botMessage = document.createElement("div");
+            botMessage.className = "bot";
+            botMessage.textContent = "Bot: " + data.response;
+            chatBox.appendChild(botMessage);
+    
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+    
+            // Clear the input field
+            document.getElementById("user-input").value = "";
+        }
+    
+        // Load conversation history when the page loads
+        window.onload = loadHistory;
+    </script>
+</body>
+</html>

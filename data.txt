@@ -1,0 +1,5 @@
+Question: What is AI?
+Answer: Artificial intelligence is the simulation of human intelligence in machines.
+
+Question: How does AI work?
+Answer: AI works by using algorithms to process data and learn from it to make decisions.

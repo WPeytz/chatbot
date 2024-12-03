@@ -1,0 +1,26 @@
+fast-import crash report:
+    fast-import process: 52214
+    parent process     : 52208
+    at 2024-12-03 09:31:44 +0000
+
+fatal: stream ends early
+
+Most Recent Commands Before Crash
+---------------------------------
+* feature done
+
+Active Branch LRU
+-----------------
+    active_branches = 0 cur, 5 max
+
+  pos  clock name
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Inactive Branches
+-----------------
+
+Marks
+-----
+
+-------------------
+END OF CRASH REPORT
